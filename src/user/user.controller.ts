@@ -1,34 +1,71 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  HttpCode,
+  Logger,
+  Post,
+  Put,
+  Request,
+  UseGuards,
+} from '@nestjs/common';
 import { UserService } from './user.service';
-import { CreateUserDto } from './dto/create-user.dto';
-import { UpdateUserDto } from './dto/update-user.dto';
+import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
+import { ApiResponse, ApiTags } from '@nestjs/swagger';
+import { User } from './entities/user.entity';
+import CreateUserDto from './dto/create-user.dto';
+import UpdateUserDto from './dto/update-user.dto';
 
 @Controller('user')
+@ApiTags('Users')
 export class UserController {
   constructor(private readonly userService: UserService) {}
 
-  @Post()
-  create(@Body() createUserDto: CreateUserDto) {
-    return this.userService.create(createUserDto);
-  }
-
   @Get()
-  findAll() {
-    return this.userService.findAll();
+  async getUsers(): Promise<User[]> {
+    try {
+      const users = await this.userService.getUsers();
+      return users;
+    } catch (e) {
+      Logger.error(e);
+      throw e;
+    }
   }
 
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.userService.findOne(+id);
+  @Post()
+  @HttpCode(201)
+  @ApiResponse({
+    status: 201,
+    description: 'The record has been successfully created.',
+  })
+  async createUser(@Body() userData: CreateUserDto): Promise<User> {
+    try {
+      const user = await this.userService.createUser(userData);
+      return user;
+    } catch (e) {
+      Logger.error(e);
+      throw e;
+    }
   }
 
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto) {
-    return this.userService.update(+id, updateUserDto);
+  @UseGuards(JwtAuthGuard)
+  @Get('me')
+  async getLoggedUser(@Request() req): Promise<User> {
+    return req.user;
   }
 
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.userService.remove(+id);
+  @UseGuards(JwtAuthGuard)
+  @Put()
+  async updateUser(
+    @Request() req,
+    @Body() userData: UpdateUserDto,
+  ): Promise<User> {
+    try {
+      const user = await this.userService.updateUser(req.user._id, userData);
+      return user;
+    } catch (e) {
+      Logger.error(e);
+      throw e;
+    }
   }
 }
