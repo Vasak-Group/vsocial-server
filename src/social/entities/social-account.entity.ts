@@ -1,5 +1,6 @@
 import { User } from 'src/user/entities/user.entity';
 import { Entity, Column, PrimaryGeneratedColumn, ManyToOne } from 'typeorm';
+import { SocialNetwork } from '../enums/social-network.enum';
 
 @Entity()
 export class SocialAccount {
@@ -10,5 +11,8 @@ export class SocialAccount {
   user: User;
 
   @Column()
-  name: string;
+  socialNetwork: SocialNetwork;
+
+  @Column()
+  token: string;
 }
