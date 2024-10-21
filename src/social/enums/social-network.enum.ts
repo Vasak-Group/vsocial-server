@@ -1,1 +1,3 @@
-export enum SocialNetwork {}
+export enum SocialNetwork {
+  TWITTER,
+}
