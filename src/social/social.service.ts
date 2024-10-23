@@ -3,6 +3,7 @@ import { ConfigService } from '@nestjs/config';
 import { TwitterService } from './services/twitter.service';
 import { SocialNetwork } from './enums/social-network.enum';
 import { SocialNetworkManager } from './entities/social-network.abstract';
+import { User } from 'src/user/entities/user.entity';
 
 @Injectable()
 export class SocialService {
@@ -22,7 +23,7 @@ export class SocialService {
     }
   }
 
-  async auth(network: SocialNetwork, user: any): Promise<any> {
+  async auth(network: SocialNetwork, user: User): Promise<string> {
     const socialNetwork = this.getSocialNetworkManager(network);
     return socialNetwork.auth(user);
   }
