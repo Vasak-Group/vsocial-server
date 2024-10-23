@@ -1,5 +1,6 @@
 export default () => ({
   port: parseInt(process.env.PORT) || 3000,
+  serviceURL: process.env.SERVICE_URL || 'http://localhost:3000',
   jwtSecret: process.env.JWT_SECRET,
   jwtExpirationTime: process.env.JWT_EXPIRATION_TIME,
   saltRounds: parseInt(process.env.SALT_ROUNDS) || 10,
@@ -13,4 +14,9 @@ export default () => ({
     synchronize: process.env.DB_SYNCHRONIZE === 'true',
     logging: process.env.DB_LOGGING === 'true',
   },
+  xAPIKey: process.env.X_API_KEY,
+  xAPISecret: process.env.X_API_SECRET,
+  xClientID: process.env.X_CLIENT_ID,
+  xClientSecret: process.env.X_CLIENT_SECRET,
+  xState: process.env.X_STATE,
 });
