@@ -30,4 +30,12 @@ export class AuthController {
   async loginNetwork(@Param('network') network: SocialNetwork, @Request() req) {
     return await this.authService.socialAuth(network, req.user);
   }
+
+  @Get(':network/:email')
+  async callbackNetwork(
+    @Param('network') network: SocialNetwork,
+    @Param('email') email: string,
+  ) {
+    return await this.authService.addSocialNetwork(network, email);
+  }
 }
